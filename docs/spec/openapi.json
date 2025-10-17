@@ -1,280 +1,326 @@
 {
-  "swagger" : "2.0",
+  "openapi" : "3.0.1",
   "info" : {
+    "title" : "API to create a Login Token for the User",
     "description" : "API to create a Login Token for the User",
-    "version" : "v1.0.0",
-    "title" : "API to create a Login Token for the User"
+    "version" : "v1.0.0"
   },
-  "host" : "api.temenos.com",
-  "basePath" : "/api/v1.0.0/",
-  "schemes" : [ "https" ],
+  "servers" : [ {
+    "url" : "https://api.temenos.com/api/v1.0.0//meta/users/{userId}"
+  } ],
   "security" : [ {
     "basicAuth" : [ ]
   } ],
   "paths" : {
-    "/meta/users/{userId}/tokens" : {
+    "/tokens" : {
       "get" : {
         "summary" : "Create unique token for the User",
         "description" : "Create unique token for the User",
         "operationId" : "getTokenForUser",
-        "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "userId",
           "in" : "path",
-          "description" : "Identifier for the User.",
+          "description" : "Identifier for the User",
           "required" : true,
-          "type" : "string"
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
         }, {
           "name" : "page_size",
           "in" : "query",
           "description" : "The total number of records per page",
           "required" : false,
-          "type" : "integer",
-          "format" : "int32"
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "x-ballerina-name" : "pageSize"
         }, {
           "name" : "page_start",
           "in" : "query",
           "description" : "The record from which the response should be displayed",
           "required" : false,
-          "type" : "integer",
-          "format" : "int32"
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "x-ballerina-name" : "pageStart"
         }, {
           "name" : "page_token",
           "in" : "query",
-          "description" : "Unique id expected to get as part of response from t24 on every enquiry request.",
+          "description" : "Unique id expected to get as part of response from t24 on every enquiry request",
           "required" : false,
-          "type" : "string"
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "x-ballerina-name" : "pageToken"
         }, {
           "name" : "credentials",
           "in" : "header",
-          "description" : "Username and password to authenticate the API against core-banking.",
+          "description" : "Username and password to authenticate the API against core-banking",
           "required" : false,
-          "type" : "string"
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
         }, {
           "name" : "companyId",
           "in" : "header",
-          "description" : "The identifier of the underlying Entity/Company/Branch.",
+          "description" : "The identifier of the underlying Entity/Company/Branch",
           "required" : false,
-          "type" : "string"
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
         } ],
         "responses" : {
           "200" : {
             "description" : "TokenForUserResponse",
-            "schema" : {
-              "$ref" : "#/definitions/TokenForUserResponse"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TokenForUserResponse"
+                }
+              }
             }
           },
           "default" : {
             "description" : "QueryErrorResponse",
-            "schema" : {
-              "$ref" : "#/definitions/QueryErrorResponse"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/QueryErrorResponse"
+                }
+              }
             }
           },
           "400" : {
             "description" : "BusinessQueryErrorResponse",
-            "schema" : {
-              "$ref" : "#/definitions/BusinessQueryErrorResponse"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BusinessQueryErrorResponse"
+                }
+              }
             }
           },
           "500" : {
             "description" : "SystemQueryErrorResponse",
-            "schema" : {
-              "$ref" : "#/definitions/SystemQueryErrorResponse"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SystemQueryErrorResponse"
+                }
+              }
             }
           }
         }
       }
     }
   },
-  "securityDefinitions" : {
-    "basicAuth" : {
-      "type" : "basic"
-    }
-  },
-  "definitions" : {
-    "QueryHeader" : {
-      "properties" : {
-        "audit" : {
-          "type" : "object",
-          "properties" : {
-            "T24_time" : {
-              "type" : "integer",
-              "format" : "int32",
-              "description" : "Time taken to response by T24"
-            },
-            "versionNumber" : {
-              "type" : "string",
-              "description" : "The CURR.NO. of the record"
-            },
-            "requestParse_time" : {
-              "type" : "number",
-              "description" : "Time taken to parse the request by IRIS"
-            },
-            "responseParse_time" : {
-              "type" : "number",
-              "description" : "Time taken to parse the response by IRIS"
-            }
-          }
-        },
-        "page_size" : {
-          "type" : "integer",
-          "format" : "int32",
-          "description" : "The total number of records per page"
-        },
-        "page_start" : {
-          "type" : "integer",
-          "format" : "int32",
-          "description" : "The record from which the response should be displayed"
-        },
-        "total_size" : {
-          "type" : "integer",
-          "format" : "int32",
-          "description" : "The total number of records present"
-        },
-        "page_token" : {
-          "type" : "string",
-          "description" : "Unique id expected to get as part of response from t24 on every enquiry request"
-        }
-      }
-    },
-    "TokenForUserResponse" : {
-      "properties" : {
-        "header" : {
-          "$ref" : "#/definitions/QueryHeader"
-        },
-        "body" : {
-          "$ref" : "#/definitions/TokenForUserResponseBody"
-        }
-      },
-      "description" : "TokenForUserResponse"
-    },
-    "TokenForUserResponseBody" : {
-      "type" : "array",
-      "items" : {
+  "components" : {
+    "schemas" : {
+      "ErrorHeader" : {
         "type" : "object",
         "properties" : {
-          "token" : {
-            "type" : "string",
-            "description" : "Unique number that identifies a user session.",
-            "maxLength" : 40
+          "audit" : {
+            "$ref" : "#/components/schemas/QueryHeaderAudit"
+          }
+        }
+      },
+      "QueryHeaderAudit" : {
+        "type" : "object",
+        "properties" : {
+          "T24_time" : {
+            "type" : "integer",
+            "description" : "Time taken to response by T24",
+            "format" : "int32",
+            "x-ballerina-name" : "t24Time"
           },
-          "validTransactUser" : {
+          "responseParse_time" : {
+            "type" : "number",
+            "description" : "Time taken to parse the response by IRIS",
+            "x-ballerina-name" : "responseParseTime"
+          },
+          "versionNumber" : {
             "type" : "string",
-            "description" : "Indicates whether a valid transact user or Not",
-            "maxLength" : 3
+            "description" : "The CURR.NO. of the record"
+          },
+          "requestParse_time" : {
+            "type" : "number",
+            "description" : "Time taken to parse the request by IRIS",
+            "x-ballerina-name" : "requestParseTime"
+          }
+        }
+      },
+      "SystemQueryErrorResponse" : {
+        "type" : "object",
+        "properties" : {
+          "header" : {
+            "$ref" : "#/components/schemas/ErrorHeader"
+          },
+          "error" : {
+            "$ref" : "#/components/schemas/SystemQueryErrorResponseBody"
+          }
+        },
+        "description" : "SystemQueryErrorResponse"
+      },
+      "TokenForUserResponseBody" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/TokenForUserResponseBodyInner"
+        }
+      },
+      "BusinessQueryErrorResponseBody" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "description" : "The identifier of the error message"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "The actual t24 error message for bad requests"
+          },
+          "type" : {
+            "type" : "string",
+            "description" : "The identifier of error type: Business"
+          }
+        }
+      },
+      "QueryErrorResponseBody" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "description" : "The identifier of the error message"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "The actual t24 error message "
+          },
+          "type" : {
+            "type" : "string",
+            "description" : "The identifier of error type: "
+          }
+        }
+      },
+      "TokenForUserResponse" : {
+        "type" : "object",
+        "properties" : {
+          "header" : {
+            "$ref" : "#/components/schemas/QueryHeader"
+          },
+          "body" : {
+            "$ref" : "#/components/schemas/TokenForUserResponseBody"
+          }
+        },
+        "description" : "TokenForUserResponse"
+      },
+      "QueryErrorResponse" : {
+        "type" : "object",
+        "properties" : {
+          "header" : {
+            "$ref" : "#/components/schemas/ErrorHeader"
+          },
+          "error" : {
+            "$ref" : "#/components/schemas/QueryErrorResponseBody"
+          }
+        },
+        "description" : "QueryErrorResponse"
+      },
+      "QueryHeader" : {
+        "type" : "object",
+        "properties" : {
+          "audit" : {
+            "$ref" : "#/components/schemas/QueryHeaderAudit"
+          },
+          "page_start" : {
+            "type" : "integer",
+            "description" : "The record from which the response should be displayed",
+            "format" : "int32",
+            "x-ballerina-name" : "pageStart"
+          },
+          "total_size" : {
+            "type" : "integer",
+            "description" : "The total number of records present",
+            "format" : "int32",
+            "x-ballerina-name" : "totalSize"
+          },
+          "page_token" : {
+            "type" : "string",
+            "description" : "Unique id expected to get as part of response from t24 on every enquiry request",
+            "x-ballerina-name" : "pageToken"
+          },
+          "page_size" : {
+            "type" : "integer",
+            "description" : "The total number of records per page",
+            "format" : "int32",
+            "x-ballerina-name" : "pageSize"
+          }
+        }
+      },
+      "BusinessQueryErrorResponse" : {
+        "type" : "object",
+        "properties" : {
+          "header" : {
+            "$ref" : "#/components/schemas/ErrorHeader"
+          },
+          "error" : {
+            "$ref" : "#/components/schemas/BusinessQueryErrorResponseBody"
+          }
+        },
+        "description" : "BusinessQueryErrorResponse"
+      },
+      "TokenForUserResponseBodyInner" : {
+        "type" : "object",
+        "properties" : {
+          "validTransactUser" : {
+            "maxLength" : 3,
+            "type" : "string",
+            "description" : "Indicates whether a valid transact user or Not"
+          },
+          "token" : {
+            "maxLength" : 40,
+            "type" : "string",
+            "description" : "Unique number that identifies a user session"
+          }
+        }
+      },
+      "SystemQueryErrorResponseBody" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "description" : "The identifier of the error message"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "The actual t24 error message caused by server"
+          },
+          "type" : {
+            "type" : "string",
+            "description" : "The identifier of error type: System"
           }
         }
       }
     },
-    "ErrorHeader" : {
-      "properties" : {
-        "audit" : {
-          "type" : "object",
-          "properties" : {
-            "T24_time" : {
-              "type" : "integer",
-              "format" : "int32",
-              "description" : "Time taken to response by T24"
-            },
-            "versionNumber" : {
-              "type" : "string",
-              "description" : "The CURR.NO. of the record"
-            },
-            "requestParse_time" : {
-              "type" : "number",
-              "description" : "Time taken to parse the request by IRIS"
-            },
-            "responseParse_time" : {
-              "type" : "number",
-              "description" : "Time taken to parse the response by IRIS"
-            }
-          }
-        }
-      }
-    },
-    "QueryErrorResponse" : {
-      "properties" : {
-        "header" : {
-          "$ref" : "#/definitions/ErrorHeader"
-        },
-        "error" : {
-          "$ref" : "#/definitions/QueryErrorResponseBody"
-        }
-      },
-      "description" : "QueryErrorResponse"
-    },
-    "QueryErrorResponseBody" : {
-      "type" : "object",
-      "properties" : {
-        "code" : {
-          "type" : "string",
-          "description" : "The identifier of the error message"
-        },
-        "message" : {
-          "type" : "string",
-          "description" : "The actual t24 error message "
-        },
-        "type" : {
-          "type" : "string",
-          "description" : "The identifier of error type: "
-        }
-      }
-    },
-    "BusinessQueryErrorResponse" : {
-      "properties" : {
-        "header" : {
-          "$ref" : "#/definitions/ErrorHeader"
-        },
-        "error" : {
-          "$ref" : "#/definitions/BusinessQueryErrorResponseBody"
-        }
-      },
-      "description" : "BusinessQueryErrorResponse"
-    },
-    "BusinessQueryErrorResponseBody" : {
-      "type" : "object",
-      "properties" : {
-        "code" : {
-          "type" : "string",
-          "description" : "The identifier of the error message"
-        },
-        "message" : {
-          "type" : "string",
-          "description" : "The actual t24 error message for bad requests"
-        },
-        "type" : {
-          "type" : "string",
-          "description" : "The identifier of error type: Business"
-        }
-      }
-    },
-    "SystemQueryErrorResponse" : {
-      "properties" : {
-        "header" : {
-          "$ref" : "#/definitions/ErrorHeader"
-        },
-        "error" : {
-          "$ref" : "#/definitions/SystemQueryErrorResponseBody"
-        }
-      },
-      "description" : "SystemQueryErrorResponse"
-    },
-    "SystemQueryErrorResponseBody" : {
-      "type" : "object",
-      "properties" : {
-        "code" : {
-          "type" : "string",
-          "description" : "The identifier of the error message"
-        },
-        "message" : {
-          "type" : "string",
-          "description" : "The actual t24 error message caused by server"
-        },
-        "type" : {
-          "type" : "string",
-          "description" : "The identifier of error type: System"
-        }
+    "securitySchemes" : {
+      "basicAuth" : {
+        "type" : "http",
+        "scheme" : "basic"
       }
     }
-  }
+  },
+  "x-original-swagger-version" : "2.0"
 }
